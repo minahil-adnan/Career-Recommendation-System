@@ -144,11 +144,12 @@ streamlit run app.py
 
 This project uses pytest for unit testing.
 
-Three test cases are included:
+Four test cases are included:
 
 1. Check that missing values are handled.
 2. Check that the target column has no missing values.
 3. Check that the dataset contains 22 career categories.
+4. Check that the dataset contains no duplicate records.
 
 Run tests using:
 
