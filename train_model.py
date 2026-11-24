@@ -307,3 +307,90 @@ for column in [
 print("\n================================")
 print("ALL THREE MODELS TRAINED SUCCESSFULLY!")
 print("================================")
+
+# Experiment 2: Random Forest Hyperparameter Comparison
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, f1_score
+from sklearn.model_selection import train_test_split
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.pipeline import Pipeline
+import pandas as pd
+
+# Load cleaned dataset
+df = pd.read_csv("dataset/cleaned_career_dataset.csv")
+
+X = df.drop(columns=["Suggested_Career_Path", "Skills_Gained"])
+y = df["Suggested_Career_Path"]
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Identify columns
+numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
+categorical_features = X.select_dtypes(include=["object"]).columns
+
+# Preprocessing
+preprocessor = ColumnTransformer([
+    ("num", "passthrough", numeric_features),
+    ("cat", OneHotEncoder(handle_unknown="ignore"), categorical_features)
+])
+
+# Different Random Forest settings
+experiments = {
+    "RF_50_Trees": RandomForestClassifier(
+        n_estimators=50, max_depth=15,
+        min_samples_leaf=2, random_state=42,
+        class_weight="balanced", n_jobs=1
+    ),
+
+    "RF_100_Trees": RandomForestClassifier(
+        n_estimators=100, max_depth=15,
+        min_samples_leaf=2, random_state=42,
+        class_weight="balanced", n_jobs=1
+    ),
+
+    "RF_No_Max_Depth": RandomForestClassifier(
+        n_estimators=50, max_depth=None,
+        min_samples_leaf=2, random_state=42,
+        class_weight="balanced", n_jobs=1
+    )
+}
+
+results = []
+
+for name, model in experiments.items():
+
+    pipeline = Pipeline([
+        ("preprocessor", preprocessor),
+        ("classifier", model)
+    ])
+
+    pipeline.fit(X_train, y_train)
+    predictions = pipeline.predict(X_test)
+
+    accuracy = accuracy_score(y_test, predictions)
+    f1 = f1_score(y_test, predictions, average="weighted")
+
+    results.append({
+        "Experiment": name,
+        "Accuracy": accuracy,
+        "Weighted F1": f1
+    })
+
+    print(name)
+    print("Accuracy:", accuracy)
+    print("Weighted F1:", f1)
+    print("--------------------")
+
+# Save experiment results
+results_df = pd.DataFrame(results)
+results_df.to_csv(
+    "outputs/random_forest_experiments.csv", index=False
+)
+
+print("\nRandom Forest Experiment Results:")
+print(results_df)
