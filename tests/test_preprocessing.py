@@ -27,3 +27,9 @@ def test_dataset_has_22_career_categories():
     df = pd.read_csv("dataset/cleaned_career_dataset.csv")
 
     assert df["Suggested_Career_Path"].nunique() == 22
+
+
+def test_dataset_has_no_duplicate_records():
+    df = pd.read_csv("dataset/cleaned_career_dataset.csv")
+
+    assert df.duplicated().sum() == 0
