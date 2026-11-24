@@ -140,5 +140,20 @@ streamlit run app.py
 - The dataset may not represent all students or real-world job market conditions.
 - Model performance can be improved with more representative data and further experiments.
 
+## Testing
+
+This project uses pytest for unit testing.
+
+Three test cases are included:
+
+1. Check that missing values are handled.
+2. Check that the target column has no missing values.
+3. Check that the dataset contains 22 career categories.
+
+Run tests using:
+
+```bash
+python -m pytest tests/test_preprocessing.py -v
+
 ## Conclusion
 This project demonstrates how machine learning can be used for career-path prediction. It combines data preprocessing, exploratory data analysis, model training, evaluation, and an interactive Streamlit application.
