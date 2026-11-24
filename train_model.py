@@ -394,3 +394,67 @@ results_df.to_csv(
 
 print("\nRandom Forest Experiment Results:")
 print(results_df)
+# Experiment 3: Decision Tree Hyperparameter Comparison
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, f1_score
+import pandas as pd
+
+experiments = {
+    "DT_Depth_5": DecisionTreeClassifier(
+        max_depth=5,
+        min_samples_leaf=5,
+        random_state=42,
+        class_weight="balanced"
+    ),
+
+    "DT_Depth_10": DecisionTreeClassifier(
+        max_depth=10,
+        min_samples_leaf=5,
+        random_state=42,
+        class_weight="balanced"
+    ),
+
+    "DT_Depth_15": DecisionTreeClassifier(
+        max_depth=15,
+        min_samples_leaf=5,
+        random_state=42,
+        class_weight="balanced"
+    )
+}
+
+results = []
+
+for name, model in experiments.items():
+
+    pipeline = Pipeline([
+        ("preprocessor", preprocessor),
+        ("classifier", model)
+    ])
+
+    pipeline.fit(X_train, y_train)
+    predictions = pipeline.predict(X_test)
+
+    accuracy = accuracy_score(y_test, predictions)
+    f1 = f1_score(y_test, predictions, average="weighted")
+
+    results.append({
+        "Experiment": name,
+        "Accuracy": accuracy,
+        "Weighted F1": f1
+    })
+
+    print(name)
+    print("Accuracy:", accuracy)
+    print("Weighted F1:", f1)
+    print("--------------------")
+
+results_df = pd.DataFrame(results)
+
+results_df.to_csv(
+    "outputs/decision_tree_experiments.csv",
+    index=False
+)
+
+print("\nDecision Tree Experiment Results:")
+print(results_df)
