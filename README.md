@@ -1,5 +1,7 @@
 # Career Recommendation System
+## Live Demo
 
+[Open Career Recommendation System](https://career-recommendation-system-nrkgqpgb8osxvo6jpfbdqv.streamlit.app/)
 ## Project Overview
 
 The Career Recommendation System is a Machine Learning project that predicts a suitable career path based on a person's educational background, technical skills, interests, and work preferences.
